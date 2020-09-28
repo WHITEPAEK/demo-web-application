@@ -1,5 +1,6 @@
-package com.tistory.whitepaek.settings;
+package com.tistory.whitepaek.settings.validator;
 
+import com.tistory.whitepaek.settings.form.PasswordForm;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 

@@ -1,4 +1,4 @@
-package com.tistory.whitepaek.settings;
+package com.tistory.whitepaek.settings.form;
 
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;

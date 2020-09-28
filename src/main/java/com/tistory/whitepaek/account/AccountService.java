@@ -1,8 +1,8 @@
 package com.tistory.whitepaek.account;
 
 import com.tistory.whitepaek.domain.Account;
-import com.tistory.whitepaek.settings.Notifications;
-import com.tistory.whitepaek.settings.Profile;
+import com.tistory.whitepaek.settings.form.Notifications;
+import com.tistory.whitepaek.settings.form.Profile;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.mail.SimpleMailMessage;
@@ -100,6 +100,12 @@ public class AccountService implements UserDetailsService {
     public void updateNotifications(Account account, Notifications notifications) {
         modelMapper.map(notifications, account);
         accountRepository.save(account);
+    }
+
+    public void updateNickname(Account account, String nickname) {
+        account.setNickname(nickname);
+        accountRepository.save(account);
+        login(account);
     }
 
 }
