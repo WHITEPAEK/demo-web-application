@@ -6,9 +6,13 @@ import com.tistory.whitepaek.account.AccountRepository;
 import com.tistory.whitepaek.account.AccountService;
 import com.tistory.whitepaek.domain.Account;
 import com.tistory.whitepaek.domain.Tag;
+import com.tistory.whitepaek.domain.Zone;
 import com.tistory.whitepaek.settings.form.TagForm;
+import com.tistory.whitepaek.settings.form.ZoneForm;
 import com.tistory.whitepaek.tag.TagRepository;
+import com.tistory.whitepaek.zone.ZoneRepository;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,9 +53,20 @@ class SettingsControllerTest {
     @Autowired
     AccountService accountService;
 
+    @Autowired
+    ZoneRepository zoneRepository;
+
+    private Zone testZone = Zone.builder().city("test").localNameOfCity("테스트시").province("테스트주").build();
+
+    @BeforeEach
+    void beforeEach() {
+        zoneRepository.save(testZone);
+    }
+
     @AfterEach
     void afterEach() {
         accountRepository.deleteAll();
+        zoneRepository.deleteAll();
     }
 
     @WithAccount("whitepaek")
@@ -231,6 +246,55 @@ class SettingsControllerTest {
 
 
         assertFalse(user.getTags().contains(newTag));
+    }
+
+    @WithAccount("whitepaek")
+    @DisplayName("계정의 지역 정보 수정 폼")
+    @Test
+    void updateZonesForm() throws Exception {
+        mockMvc.perform(get(ROOT + SETTINGS + ZONES))
+                .andExpect(view().name(SETTINGS + ZONES))
+                .andExpect(model().attributeExists("account"))
+                .andExpect(model().attributeExists("whitelist"))
+                .andExpect(model().attributeExists("zones"));
+    }
+
+    @WithAccount("whitepaek")
+    @DisplayName("계정의 지역 정보 추가")
+    @Test
+    void addZone() throws Exception {
+        ZoneForm zoneForm = new ZoneForm();
+        zoneForm.setZoneName(testZone.toString());
+
+        mockMvc.perform(post(ROOT + SETTINGS + ZONES + "/add")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(zoneForm))
+                        .with(csrf()))
+                .andExpect(status().isOk());
+
+        Account user = accountRepository.findByNickname("whitepaek");
+        Zone zone = zoneRepository.findByCityAndProvince(testZone.getCity(), testZone.getProvince());
+        assertTrue(user.getZones().contains(zone));
+    }
+
+    @WithAccount("whitepaek")
+    @DisplayName("계정의 지역 정보 삭제")
+    @Test
+    void removeZone() throws Exception {
+        Account user = accountRepository.findByNickname("whitepaek");
+        Zone zone = zoneRepository.findByCityAndProvince(testZone.getCity(), testZone.getProvince());
+        accountService.addZone(user, zone);
+
+        ZoneForm zoneForm = new ZoneForm();
+        zoneForm.setZoneName(testZone.toString());
+
+        mockMvc.perform(post(ROOT + SETTINGS + ZONES + "/remove")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(zoneForm))
+                        .with(csrf()))
+                .andExpect(status().isOk());
+
+        assertFalse(user.getZones().contains(zone));
     }
 
 }

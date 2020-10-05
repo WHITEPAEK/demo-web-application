@@ -3,6 +3,7 @@ package com.tistory.whitepaek.account;
 import com.tistory.whitepaek.account.form.SignUpForm;
 import com.tistory.whitepaek.domain.Account;
 import com.tistory.whitepaek.domain.Tag;
+import com.tistory.whitepaek.domain.Zone;
 import com.tistory.whitepaek.settings.form.Notifications;
 import com.tistory.whitepaek.settings.form.Profile;
 import lombok.RequiredArgsConstructor;
@@ -127,6 +128,21 @@ public class AccountService implements UserDetailsService {
     public void removeTag(Account account, Tag tag) {
         Optional<Account> byId = accountRepository.findById(account.getId());
         byId.ifPresent(a -> a.getTags().remove(tag));
+    }
+
+    public Set<Zone> getZones(Account account) {
+        Optional<Account> byId = accountRepository.findById(account.getId());
+        return byId.orElseThrow().getZones();
+    }
+
+    public void addZone(Account account, Zone zone) {
+        Optional<Account> byId = accountRepository.findById(account.getId());
+        byId.ifPresent(a -> a.getZones().add(zone));
+    }
+
+    public void removeZone(Account account, Zone zone) {
+        Optional<Account> byId = accountRepository.findById(account.getId());
+        byId.ifPresent(a -> a.getZones().remove(zone));
     }
 
 }
