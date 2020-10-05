@@ -1,5 +1,7 @@
-package com.tistory.whitepaek.account;
+package com.tistory.whitepaek.account.validator;
 
+import com.tistory.whitepaek.account.AccountRepository;
+import com.tistory.whitepaek.account.form.SignUpForm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;

@@ -2,7 +2,7 @@ package com.tistory.whitepaek.main;
 
 import com.tistory.whitepaek.account.AccountRepository;
 import com.tistory.whitepaek.account.AccountService;
-import com.tistory.whitepaek.account.SignUpForm;
+import com.tistory.whitepaek.account.form.SignUpForm;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

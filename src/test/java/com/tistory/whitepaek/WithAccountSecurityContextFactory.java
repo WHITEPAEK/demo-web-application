@@ -1,7 +1,7 @@
 package com.tistory.whitepaek;
 
 import com.tistory.whitepaek.account.AccountService;
-import com.tistory.whitepaek.account.SignUpForm;
+import com.tistory.whitepaek.account.form.SignUpForm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
