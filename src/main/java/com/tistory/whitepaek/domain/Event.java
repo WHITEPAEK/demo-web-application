@@ -10,6 +10,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@NamedEntityGraph(
+        name = "Event.withEnrollments",
+        attributeNodes = @NamedAttributeNode("enrollments")
+)
 @Entity
 @Getter @Setter @EqualsAndHashCode(of = "id")
 public class Event {
@@ -103,6 +107,10 @@ public class Event {
 
     public long getNumberOfAcceptedEnrollments() {
         return this.enrollments.stream().filter(Enrollment::isAccepted).count();
+    }
+
+    public int numberOfRemainSpots() {
+        return this.limitOfEnrollments - (int) this.enrollments.stream().filter(Enrollment::isAccepted).count();
     }
 
 }
